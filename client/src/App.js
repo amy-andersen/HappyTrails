@@ -3,6 +3,7 @@ import AllTrails from './components/AllTrails';
 import EditTrail from './components/EditTrail';
 import NewTrail from './components/NewTrail';
 import Profile from './components/Profile';
+import Verify from './components/Verify';
 import LogReg from './views/LogReg';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<LogReg/>}/>
+          <Route path="/verify" element={<Verify/>}/>
           <Route path="/home" element={<AllTrails/>}/>
           <Route path="/new" element={<NewTrail/>}/>
           <Route path="/edit/:id" element={<EditTrail/>}/>

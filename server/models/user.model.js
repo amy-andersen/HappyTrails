@@ -20,6 +20,12 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Password is required"],
         minLength: [8, "Passwords must be at least 8 characters"]
     },
+    phone: {
+        type: Number,
+        required: [true, "A phone number is required for 2FA"],
+        min: [999999999, "Number must be 10 digits"],
+        max: [10000000000, "Number must be 10 digits"]
+    }
     // traillist: [
     //     {
     //         type: mongoose.Schema.Types.ObjectId,

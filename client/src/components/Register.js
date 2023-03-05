@@ -10,6 +10,7 @@ const Register = (props) => {
     const [user, setUser] = useState({
         username: "",
         email: "",
+        phone: "",
         password: "",
         confirmPassword: "",
     });
@@ -34,6 +35,7 @@ const Register = (props) => {
                 setUser({
                     username: "",
                     email: "",
+                    phone: "",
                     password: "",
                     confirmPassword: "",
                 });
@@ -66,7 +68,13 @@ const Register = (props) => {
                     {errors.email ?
                         <p className="text-warning">{errors.email.message}</p>
                         : null}
-                    
+                </div>
+                <div>
+                    <label className="text-light">Phone Number</label>
+                    <input type="number" className="form-control" name="phone" value={user.phone} placeholder="Enter 10-digit phone number" onChange={handleChange}/>
+                    {errors.phone ?
+                        <p className="text-warning">{errors.phone.message}</p>
+                        : null}
                 </div>
                 <div>
                     <label className="text-light">Password</label>

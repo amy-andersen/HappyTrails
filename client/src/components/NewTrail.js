@@ -129,7 +129,7 @@ const NewTrail = (props) => {
                         <label className="text-light me-1 ms-4">Completed?</label>
                         <input type="checkbox" checked={completed} onChange = {(e)=>setCompleted(e.target.checked)}/>
                         <br></br>
-                        <button className="btn btn-success mx-4 mt-4">Add Hike</button>
+                        <button className="btn btn-success ms-4 mt-4">Add Hike</button>
                     </div>
                 </form>
             </div>

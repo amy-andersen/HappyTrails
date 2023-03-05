@@ -1,6 +1,12 @@
 const User  = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Vonage } = require("@vonage/server-sdk");
+
+const vonage = new Vonage({
+    apiKey: "279bb2ec",
+    apiSecret: "X4iSrzoPx8IgStbK"
+})
 
 module.exports = {
 
@@ -26,6 +32,7 @@ module.exports = {
     },
 
     login: (req, res)=>{
+
         User.findOne({email: req.body.email})
             .then((userRecord)=>{
             //check if this returned obj is null
@@ -46,7 +53,8 @@ module.exports = {
                                             //payload is the data we want to save/use
                                             id: userRecord._id,
                                             email: userRecord.email,
-                                            username: userRecord.username
+                                            username: userRecord.username,
+                                            phone: userRecord.phone
                                         },
                                         //we need a key to sign and hash cookie's data
                                         //Our payload needs a scret key. We will use a .env file to store such things privately. 
@@ -72,14 +80,46 @@ module.exports = {
                             }
                         })
                         .catch((err)=>{
-                            console.log(err);
+                            // console.log(err);
                             res.status(400).json({ message: "Invalid Attempt" });
                         })
                 }
             })
             .catch((err)=>{
-                console.log(err);
+                // console.log(err);
                 res.status(400).json({ message: "Invalid Attempt" });
+            })
+    },
+
+    sendCode: (req, res)=>{
+    //send verification code upon successful login
+        console.log(req.body.phone)
+        vonage.verify.start({
+            number: 10000000000 + req.body.phone,
+            brand: "Vonage"
+            })
+        .then((code)=>{
+            console.log(code.request_id);
+            res.json(code);
+        })
+        .catch((err)=>{
+            console.log("Send verification code failed");
+            res.json({message: "Something went wrong. Code not sent."})
+        })
+    },
+
+    verify: (req, res)=>{
+    //compare entered code to vonage request id
+        console.log(req.body.vonageCode)
+        console.log(req.body.enteredCode)
+        vonage.verify.check(req.body.vonageCode, req.body.enteredCode)
+        .then((isCodeValid)=>{
+            console.log(isCodeValid);
+            res.json(isCodeValid);
+        })
+        .catch((err)=>{
+            console.log(err);
+            res.status(400).json({ message: "Invalid Attempt" });
             })
     },
 
@@ -97,17 +137,17 @@ module.exports = {
         // })
         User.findOne({_id: req.jwtpayload.id})
             .then((user)=>{
-                console.log(user);
+                // console.log(user);
                 res.json(user)
             })
             .catch((err)=>{
-                console.log(err);
+                // console.log(err);
             })
     },
 
     findAllUsers: (req, res) => {
         //use the model to connect to the collection and 
-        //find/return all documents from our games collection  
+        //find/return all documents from the hikes collection  
         User.find()
             .then((allUsers) => {
                 res.json(allUsers);

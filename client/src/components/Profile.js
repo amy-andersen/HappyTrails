@@ -8,7 +8,16 @@ const Profile = (props)=>{
     const {username} = useParams();
     const [completedHikes, setCompletedHikes] = useState([]);
     const [incompleteHikes, setIncompleteHikes] = useState([]);
-    const [totalMiles, setTotalMiles] = useState(0);
+    const [compLocationOne, setCompLocationOne] = useState("");
+    const [compLocationTwo, setCompLocationTwo] = useState("");
+    const [compLocationThree, setCompLocationThree] = useState("");
+    const [compLocationFour, setCompLocationFour] = useState("");
+    const [compLocationFive, setCompLocationFive] = useState("");
+    const [incLocationOne, setIncLocationOne] = useState("");
+    const [incLocationTwo, setIncLocationTwo] = useState("");
+    const [incLocationThree, setIncLocationThree] = useState("");
+    const [incLocationFour, setIncLocationFour] = useState("");
+    const [incLocationFive, setIncLocationFive] = useState("");
 
     const navigate = useNavigate();
 
@@ -18,7 +27,7 @@ const Profile = (props)=>{
             { withCredentials: true }
         )
             .then((res) => {
-                // console.log(res.data);
+                console.log(res.data);
                 setUser(res.data);
             })
             .catch((err) => {
@@ -35,29 +44,14 @@ const Profile = (props)=>{
                 },
             )
             .then((res) => {
-                // console.log(res);
-                // console.log(res.data);
+                console.log(res);
+                console.log(res.data);
                 navigate("/");
             })
             .catch((err) => {
                 console.log(err);
             });
     };
-
-
-    const mileCount = () =>{
-        let count = 0
-        for(let i=0;i<completedHikes.length;i++){
-            console.log("*******************"+completedHikes[i])
-            let test = completedHikes[i]
-            console.log(test)
-            count += (test.distance)
-            console.log(count)
-        }
-
-        setTotalMiles(count)
-    }
-
 
     //get list of completed hikes
     useEffect(()=>{
@@ -66,37 +60,18 @@ const Profile = (props)=>{
             { withCredentials: true }
         )
             .then((res)=>{
-                // console.log(res.data);
+                console.log(res.data);
                 setCompletedHikes(res.data);
-                mileCount()
-
-                // console.log(totalMiles)
-                // if(totalMiles===0){
-                    // let count = 0
-                    // for(let i=0;i<completedHikes.length;i++){
-                    //     console.log("*******************"+completedHikes[i])
-                    //     let test = completedHikes[i]
-                    //     console.log(test)
-                    //     count += (test.distance)
-                    //     console.log(count)
-                    // }
-                    //     setTotalMiles(count)
-                // else{console.log("hikes already counted")}
-                }
-                
-                // setTotalMiles(0)
-                // completedHikes.map((trail, index) => (
-                //     console.log("***********************************************************************"+trail.distance)
-                    // setTotalMiles(totalMiles += trail.distance)
-                // ))
-            )
+                setCompLocationOne(res.data[0].location);
+                setCompLocationTwo(res.data[1].location);
+                setCompLocationThree(res.data[2].location);
+                setCompLocationFour(res.data[3].location);
+                setCompLocationFive(res.data[4].location);
+            })
             .catch((err)=>{
                 console.log(err)
             })
-    }, [username])
-
-
-
+    }, [])
 
     //get list of incompleted hikes
     useEffect(()=>{
@@ -104,8 +79,13 @@ const Profile = (props)=>{
             { withCredentials: true }
         )
             .then((res)=>{
-                // console.log(res.data);
+                console.log(res.data);
                 setIncompleteHikes(res.data);
+                setIncLocationOne(res.data[0].location);
+                setIncLocationTwo(res.data[1].location);
+                setIncLocationThree(res.data[2].location);
+                setIncLocationFour(res.data[3].location);
+                setIncLocationFive(res.data[4].location);
             })
             .catch((err)=>{
                 console.log(err)
@@ -130,8 +110,11 @@ const Profile = (props)=>{
                     <h1>Welcome, {username}!</h1>
                     : <h2>{username}'s Hikes</h2>
             }
-            <h3>Total Miles Hiked: {totalMiles}</h3>
+            <h3>Total Hikes Completed: {completedHikes.length}</h3>
             <Link className="btn btn-success fs-5 mt-2" to={"/new"}>Add New Hike</Link>
+            <div className="d-flex justify-content-center my-2">
+                <img className="rounded" alt="map" src= {`https://maps.googleapis.com/maps/api/staticmap?markers=color:green|${compLocationOne}|${compLocationTwo}|${compLocationThree}|${compLocationFour}|${compLocationFive}&markers=color:orange|${incLocationOne}|${incLocationTwo}|${incLocationThree}|${incLocationFour}|${incLocationFive}&size=600x300&maptype=terrain&key=AIzaSyDV5jkAVY_DBELt56Oj8fuW60-KWhjbDy0`}/>
+            </div>
             <div className="d-flex justify-content-around">
                 <div className="col-5 d-inline">
                     <h3 className="text-center text-light">Adventure List</h3>
